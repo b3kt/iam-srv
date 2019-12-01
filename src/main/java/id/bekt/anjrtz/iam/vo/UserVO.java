@@ -5,7 +5,8 @@ import io.quarkus.security.identity.SecurityIdentity;
 import java.util.Date;
 
 public class UserVO {
-    private String userName;
+    private String id;
+    private String username;
     private String firstName;
     private String lastName;
 
@@ -17,8 +18,10 @@ public class UserVO {
     private Date birthdate;
     private String birthPlace;
 
+    private Boolean emailVerified;
+
     public UserVO(SecurityIdentity identity) {
-        this.userName = identity.getPrincipal().getName();
+        this.username = identity.getPrincipal().getName();
         this.firstName = identity.getAttributes().toString();
     }
 
@@ -86,11 +89,27 @@ public class UserVO {
         this.birthPlace = birthPlace;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getId() {
+        return id;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Boolean getEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(Boolean emailVerified) {
+        this.emailVerified = emailVerified;
     }
 }

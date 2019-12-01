@@ -1,11 +1,14 @@
 package id.bekt.anjrtz.iam.controller;
 
 import id.bekt.anjrtz.iam.constant.PathConstant;
-import id.bekt.anjrtz.iam.service.IKeycloakClientService;
+import id.bekt.anjrtz.iam.service.impl.KeycloakAdminClientService;
 import id.bekt.anjrtz.iam.vo.UserVO;
+import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
 import org.jboss.resteasy.annotations.cache.NoCache;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -17,17 +20,19 @@ import java.util.List;
 @Path(PathConstant.USER)
 public class UserResource extends BaseResource {
 
+    Logger logger = LoggerFactory.getLogger("default");
+
     @Inject
     SecurityIdentity identity;
 
     @Inject
-    IKeycloakClientService keycloakClientService;
-
+    KeycloakAdminClientService keycloakAdminClientService;
 
     @GET
     @Path(PathConstant.USER_ME)
     @Produces(MediaType.APPLICATION_JSON)
     @NoCache
+    @Authenticated
     public UserVO me() {
         return new UserVO(identity);
     }
@@ -45,10 +50,7 @@ public class UserResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     @NoCache
     public List<UserVO> getAllUsers() {
-        return keycloakClientService.getAllUsers();
+        String token = keycloakAdminClientService.getKeycloakAdminToken();
+        return  keycloakAdminClientService.getKeycloakUserList(token);
     }
-
-
-
-
 }
